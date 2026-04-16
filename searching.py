@@ -1,5 +1,9 @@
 from pathlib import Path
 import json
+import time
+import matplotlib.pyplot as plt
+from generators import unordered_sequence, ordered_sequence
+
 
 #ukol 1-Načtení dat ze souboru
 def read_data(file_name, klic):
@@ -48,18 +52,68 @@ def linear_search(sekvence, hledane_cislo):
 #ukol 3-Binární vyhledávání
 def binary_search(sekvence, hled_cislo):
     vlevo = 0
-    vpravo = len(sekvence)-1
+    vpravo = len(sekvence) - 1
     while vlevo <= vpravo:
-        uprostred = (vlevo + vpravo) //2
+        uprostred = (vlevo + vpravo) // 2
         if sekvence[uprostred] == hled_cislo:
             return uprostred
         elif sekvence[uprostred] < hled_cislo:
             vlevo = uprostred + 1
         else:
-            vpravo - uprostred-1
+            vpravo = uprostred - 1
     return None
+#konec ukolu 3
 
 
+
+#ukol 4-Měření času běhu
+def measure_time():
+    delky = [100, 500, 1000, 5000, 10000]
+    linearni = []
+    binarni = []
+    for delka in delky:
+        nesez_data = unordered_sequence(delka)
+        seraz_data = ordered_sequence(delka)
+        moje_cislo = seraz_data[-1]
+        soucet_linearni = 0
+        soucet_binarni = 0
+
+        for _ in range(50):
+            zacatek = time.perf_counter()
+            linear_search(nesez_data, moje_cislo)
+            soucet_linearni += time.perf_counter() - zacatek
+            zacatek = time.perf_counter()
+            binary_search(seraz_data, moje_cislo)
+            soucet_binarni += time.perf_counter() - zacatek
+
+        linearni.append(soucet_linearni / 50)
+        binarni.append(soucet_binarni / 50)
+
+    #Vykreslim
+    plt.plot(delky, linearni, label="Linear search")
+    plt.plot(delky, binarni, label="Binary search")
+    plt.xlabel("Velikost vstupu")
+    plt.ylabel("Cas v sekundach")
+    plt.title("Porovnani casu")
+    plt.legend()
+    plt.show()
+#konec ukolu4
+
+
+
+#ukol 5-Vyhledávání vzorů v DNA
+def pattern_search(sekvence, hled_vzor):
+    pozice = set()
+    for i in range(len(sekvence)-len(hled_vzor)+1):
+        shodujese = True
+        # ukol 6
+        for j in range(len(hled_vzor)):
+            if sekvence[i +j] != hled_vzor[j]:
+                shodujese = False
+                break #zapomínám!!!!
+        if shodujese:
+            pozice.add(i)
+    return pozice
 
 
 def main():
@@ -74,10 +128,16 @@ def main():
     #ukol3
     serazene = read_data("sequential.json", "ordered_numbers")
     print(serazene)
-    cislo = 5
+    cislo = 7
     index = binary_search(serazene,cislo)
     print(index)
-
+    #ukol5
+    dna = read_data("sequential.json", "dna_sequence")
+    hled_vzor = "ATA"
+    pozice = pattern_search(dna, hled_vzor)
+    print(pozice)
+    # ukol4 - spis musi byt na konci
+    measure_time()
 
 
 if __name__ == "__main__":
