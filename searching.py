@@ -1,8 +1,8 @@
 from pathlib import Path
 import json
 
-#
-def read_data(file_name, field):
+#ukol 1-Načtení dat ze souboru
+def read_data(file_name, klic):
     """
     Reads a JSON file and returns data for a given field.
 
@@ -19,12 +19,23 @@ def read_data(file_name, field):
     """
     # get current working directory path
     cwd_path = Path.cwd()
-    
     file_path = cwd_path / file_name
+
+    #ja
+    with open(file_path, "r", encoding = "utf-8") as file:
+        data = json.load(file)
+        if klic not in data:
+            return None
+        return data[klic]
+    #konec ukolu 1
+
 
 
 def main():
-    pass
+    #pass
+    # ukol1
+    sequential_data = read_data("sequential.json", "unordered_numbers")
+    print(sequential_data)
 
 
 if __name__ == "__main__":
