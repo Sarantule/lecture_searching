@@ -31,11 +31,27 @@ def read_data(file_name, klic):
 
 
 
+#ukol 2-Sekvenční vyhledávání
+def linear_search(sekvence, hledane_cislo):
+    seznam_pozic = []
+    pocet_vyskytu = 0
+    for i in range(len(sekvence)):
+        if sekvence[i] == hledane_cislo:
+            seznam_pozic.append(i)
+            pocet_vyskytu += 1
+    return {"positions": seznam_pozic, "count": pocet_vyskytu}
+#konec ukolu 2
+
 def main():
     #pass
-    # ukol1
+    #ukol1
     sequential_data = read_data("sequential.json", "unordered_numbers")
     print(sequential_data)
+    #ukol2
+    hled_cislo = 7 #zvolila jsem si
+    vysledek = linear_search(sequential_data, hled_cislo)
+    print(vysledek)
+
 
 
 if __name__ == "__main__":
